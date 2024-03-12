@@ -7,6 +7,7 @@ const app = express();
 
 const userController = require('./src/controllers/userController');
 const historicalInformationController = require('./src/controllers/historyController');
+const placeController = require('./src/controllers/placeController');
 
 app.use(express.json());
 app.use(cors());
@@ -16,7 +17,7 @@ const dbUrl = "mongodb+srv://test_user:D803jMp9AalcQyxE@cluster0.szxkpy2.mongodb
 mongoose.connect(dbUrl)
     .then(() => { 
         console.log('Connected to MongoDB');
-    })
+    }) 
     .catch((err) => {
         console.log('Connection to MongoDB failed');
         console.log(err);
@@ -25,6 +26,7 @@ mongoose.connect(dbUrl)
 
 app.use("/user", userController);
 app.use("/historicalInformation",historicalInformationController);
+app.use("/place", placeController);
 
 
 app.listen(3000, () => {

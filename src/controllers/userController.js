@@ -25,6 +25,38 @@ router.post('/signup', async (req, res, next) => {
     }
 });
 
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await UserModel.findOne({ email });
+
+        if (user) {
+            
+           // const isPasswordValid = await bcrypt.compare(password, user.password);
+
+            // if (isPasswordValid) {
+            //     res.json({ message: "Success" ,data: user });
+            // } else {
+            //     console.log("Password comparison failed.");
+            //     res.json({ message: "The password is incorrect" });
+            // }
+
+            if(password === user.password){
+                res.json({ message: "Success" ,data: user });
+            }else{
+                res.json({ message: "The password is incorrect" });
+            }
+           
+        } else {
+            res.json({ message: "No record exists for this email" });
+        }
+    } catch (error) {
+        console.error("Error during login:", error);
+        res.status(500).json({ message: "An error occurred during login" });
+    }
+});
+
 
 router.get('/', async (req, res, next) => {
     try {
