@@ -6,7 +6,6 @@ const app = express();
 
 
 const userController = require('./src/controllers/userController');
-const historicalInformationController = require('./src/controllers/historyController');
 const placeController = require('./src/controllers/placeController');
 
 app.use(express.json());
@@ -25,7 +24,6 @@ mongoose.connect(dbUrl)
 );
 
 app.use("/user", userController);
-app.use("/historicalInformation",historicalInformationController);
 app.use("/place", placeController);
 
 

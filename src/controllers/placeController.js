@@ -22,4 +22,33 @@ router.post('/', async (req, res, next) => {
     }
 });
 
+router.get('/subtype/:subtype', async (req, res, next) => {
+    try {
+        const subtype = req.params.subtype; 
+        const subTypes = await PlaceModel.find({ subtype });
+
+        if (!subTypes || subTypes.length === 0) {
+            return res.status(404).json({ message: 'No subTypes found' });
+        }
+
+        res.status(200).json(subTypes);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/:placeId', async (req, res, next) => {
+    try {
+        const place = await PlaceModel.findById(req.params.placeId);
+ 
+        if (!place) {
+            return res.status(404).json({ message: 'Place not found' });
+        }
+
+        res.status(200).json(place);
+    } catch (err) {
+        next(err);
+    }
+});
+
 module.exports = router;
