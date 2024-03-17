@@ -32,7 +32,7 @@ router.get('/subtype/:subtype', async (req, res, next) => {
         }
 
         res.status(200).json(subTypes);
-    } catch (err) {
+    } catch (err) { 
         next(err);
     }
 });
