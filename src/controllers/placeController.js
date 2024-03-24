@@ -7,6 +7,7 @@ router.get('/', async (req, res, next) => {
     try {
         const places = await PlaceModel.find();
         res.status(200).json(places);
+        console.log(places);
     } catch (err) {
         next(err);
     }
