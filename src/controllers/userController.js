@@ -44,18 +44,21 @@ router.post("/login", async (req, res) => {
 
             if(password === user.password){
                 res.json({ message: "Success" ,data: user });
+                console.log("Login successful.");
             }else{
                 res.json({ message: "The password is incorrect" });
+                console.log("Password comparison failed.");
             }
            
         } else {
-            res.json({ message: "No record exists for this email" });
+            res.json({ message: "No record exists for this email" }); 
+            console.log("No record exists for this email");
         }
     } catch (error) {
         console.error("Error during login:", error);
         res.status(500).json({ message: "An error occurred during login" });
     }
-});
+}); 
 
 
 router.get('/', async (req, res, next) => {

@@ -37,6 +37,20 @@ router.get('/subtype/:subtype', async (req, res, next) => {
         next(err);
     }
 });
+router.get('/type/:type', async (req, res, next) => {
+    try {
+        const type = req.params.type; 
+        const types = await PlaceModel.find({ type });
+
+        if (!types || types.length === 0) {
+            return res.status(404).json({ message: 'No Types found' });
+        }
+
+        res.status(200).json(types);
+    } catch (err) { 
+        next(err);
+    }
+});
 
 router.get('/:placeId', async (req, res, next) => {
     try {
