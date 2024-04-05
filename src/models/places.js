@@ -1,29 +1,39 @@
 const mongoose = require('mongoose');
+
+
 const PlaceSchema = new mongoose.Schema({
     type: {
-        type:String
+        type: String
     },
     subtype: {
-        type:String
+        type: String
     },
     title: {
-        type:String
+        type: String
     },
     description: {
-        type:String
+        type: String
     },
     street: {
-        type:String
+        type: String
     },
     image: {
-        type:String
+        type: String
     },
     latitude: {
-        type:String
+        type: String
     },
     longitude: {
-        type:String
-    }
+        type: String
+    },
+    reviews: [
+        {
+            rating: Number,
+            comment: String,
+            user: String
+        }
+    ]
+
 });
 
 const PlaceModel = mongoose.model("place", PlaceSchema);
