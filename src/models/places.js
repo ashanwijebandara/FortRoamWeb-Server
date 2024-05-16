@@ -29,8 +29,8 @@ const PlaceSchema = new mongoose.Schema({
     reviews: [
         {
             rating: Number,
-            comment: String,
-            user: String
+            content: String,
+            name: String
         }
     ]
 

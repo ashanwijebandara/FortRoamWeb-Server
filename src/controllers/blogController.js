@@ -6,13 +6,29 @@ const router = express.Router();
 // create a new blog
 router.post('/', async (req, res, next) => {
     try {
-        const blog = new BlogModel(req.body);
+        
+        if (!req.body.title || !req.body.description || !req.body.username) {
+            return res.status(400).json({ message: 'Title, description, and username are required' });
+        }
+
+               const blog = new BlogModel({
+            title: req.body.title,
+            description: req.body.description,
+            username: req.body.username,
+            image: req.body.image 
+        });
+
+        
         const createdBlog = await blog.save();
+
+        
         res.status(201).json(createdBlog);
     } catch (err) {
+        
         next(err);
     }
 });
+
 
 // get all blogs
 
@@ -23,7 +39,7 @@ router.get('/', async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-});
+}); 
 
 // get a blog by id
 router.get('/:blogId', async (req, res, next) => {

@@ -7,7 +7,7 @@ router.get('/', async (req, res, next) => {
     try {
         const places = await PlaceModel.find();
         res.status(200).json(places);
-        console.log(places);
+      
     } catch (err) {
         next(err);
     }
@@ -46,11 +46,29 @@ router.get('/type/:type', async (req, res, next) => {
             return res.status(404).json({ message: 'No Types found' });
         }
 
-        res.status(200).json(types);
+        // Calculate average rating for each place
+        const typesWithAverageRating = await Promise.all(types.map(async place => {
+            let totalRating = 0;
+            if (place.reviews.length > 0) {
+                totalRating = place.reviews.reduce((acc, review) => acc + review.rating, 0);
+                totalRating /= place.reviews.length;
+            }
+            return {
+                _id: place._id,
+                title: place.title,
+                street: place.street,
+                description: place.description,
+                averageRating: totalRating,
+                totalReviews: place.reviews.length
+            };
+        }));
+
+        res.status(200).json(typesWithAverageRating);
     } catch (err) { 
         next(err);
     }
 });
+
 
 router.get('/:placeId', async (req, res, next) => {
     try {
@@ -66,29 +84,49 @@ router.get('/:placeId', async (req, res, next) => {
     }
 });
 
-
- // Define a separate route for top-rated places
-router.get('/popular', async (req, res, next) => {
+router.get('/review/top', async (req, res, next) => {
     try {
         const places = await PlaceModel.find();
 
         // Calculate average rating for each place
-        const placesWithAverageRating = places.map(place => ({
-            ...place.toObject(),
-            averageRating: place.reviews.length > 0 ? place.reviews.reduce((acc, review) => acc + review.rating, 0) / place.reviews.length : 0
-        }));
+        const placesWithAverageRating = places.map(place => {
+            let totalRating = 0;
+            if (place.reviews.length > 0) {
+                totalRating = place.reviews.reduce((acc, review) => acc + review.rating, 0);
+                totalRating /= place.reviews.length;
+            }
+            return {
+                placeId: place._id,
+                averageRating: totalRating,
+                totalReviews: place.reviews.length
+            };
+        });
 
-        // Sort places by average rating in descending order
+        
         placesWithAverageRating.sort((a, b) => b.averageRating - a.averageRating);
 
-        // Select top 5 places
+       
         const top5Places = placesWithAverageRating.slice(0, 5);
 
-        return res.status(200).json(top5Places);
+        
+        const topPlacesDetails = await Promise.all(top5Places.map(async place => {
+            const detailedPlace = await PlaceModel.findById(place.placeId);
+            return {
+                _id: detailedPlace._id,
+                title: detailedPlace.title,
+                street: detailedPlace.street,
+                description: detailedPlace.description,
+                averageRating: place.averageRating, 
+                totalReviews: place.totalReviews
+            };
+        }));
+
+        return res.status(200).json(topPlacesDetails);
     } catch (err) {
         next(err);
     }
 });
+
 
 
 
@@ -101,7 +139,7 @@ router.get('/review/:placeId', async (req , res , next)=> {
             return res.status(404).json({ message: 'Place not found' });
         }
         
-         // Calculate average rating
+         
          let totalRating = 0;
          if (place.reviews.length > 0) {
              totalRating = place.reviews.reduce((acc, review) => acc + review.rating, 0);
@@ -110,13 +148,53 @@ router.get('/review/:placeId', async (req , res , next)=> {
 
          const totalReviews = place.reviews.length;
  
-         return res.status(200).json({ averageRating: totalRating ,totalReviews});
+         return res.status(200).json({ averageRating: totalRating ,totalReviews}); 
      } catch (err) {
         next(err);
     }
  });
 
 
+// add a review for a place
+router.post('/review/:id', async (req, res, next) => {
+    try {
+        const placeId = req.params.id;
+        const { name, rating, content } = req.body;
+
+       
+        if (!name || !rating || !content) {
+            return res.status(400).json({ message: "Name, rating, and text are required fields for a review" });
+        }
+
+        
+        const place = await PlaceModel.findById(placeId);
+
+       
+        if (place) {
+            
+            const newReview = {
+                name: name,
+                rating: rating,
+                content: content
+            };
+
+           
+            place.reviews.push(newReview);
+
+            
+            const updatedPlace = await place.save();
+
+            
+            res.status(200).json(updatedPlace);
+        } else {
+            
+            res.status(404).json({ message: 'Place not found' });
+        }
+    } catch (err) {
+        
+        next(err);
+    }
+});
 
 
 module.exports = router;

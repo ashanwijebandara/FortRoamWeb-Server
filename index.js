@@ -13,6 +13,7 @@ const blogController = require('./src/controllers/blogController');
 
 app.use(express.json()); 
 app.use("/src/images", express.static(path.join(__dirname, "/src/images")));
+
 app.use(cors());
 
 const dbUrl = "mongodb+srv://test_user:D803jMp9AalcQyxE@cluster0.szxkpy2.mongodb.net/FortRoam?retryWrites=true&w=majority";
@@ -40,7 +41,7 @@ const upload = multer({storage:storage});
 app.post('/upload', upload.single('file'), (req, res) => { 
     console.log(req.file); 
     res.status(200).json('File has been uploaded');  
-});
+}); 
 
  
 
