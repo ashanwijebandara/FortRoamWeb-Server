@@ -1,37 +1,27 @@
 const express = require('express');
 const BlogModel = require('../models/blogs');
-
 const router = express.Router();
-
 // create a new blog
 router.post('/', async (req, res, next) => {
     try {
-        
         if (!req.body.title || !req.body.description || !req.body.username) {
             return res.status(400).json({ message: 'Title, description, and username are required' });
         }
-
-               const blog = new BlogModel({
+        const blog = new BlogModel({
             title: req.body.title,
             description: req.body.description,
             username: req.body.username,
-            image: req.body.image 
+            image: req.body.image
         });
-
-        
         const createdBlog = await blog.save();
-
-        
         res.status(201).json(createdBlog);
     } catch (err) {
-        
+
         next(err);
     }
 });
 
-
 // get all blogs
-
 router.get('/', async (req, res, next) => {
     try {
         const blogs = await BlogModel.find();
@@ -39,7 +29,7 @@ router.get('/', async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-}); 
+});
 
 // get a blog by id
 router.get('/:blogId', async (req, res, next) => {
@@ -59,9 +49,7 @@ router.get('/:blogId', async (req, res, next) => {
 // update a blog
 router.put('/update/:blogId', async (req, res, next) => {
     try {
-
         const blog = await BlogModel.findById(req.params.blogId);
-
         if (blog.username == req.body.username) {
             try {
                 const updatedBlog = await BlogModel.findByIdAndUpdate(
@@ -91,16 +79,11 @@ router.put('/update/:blogId', async (req, res, next) => {
 router.delete('/delete/:blogId', async (req, res, next) => {
     try {
         const blog = await BlogModel.findById(req.params.blogId);
-
-        if (blog.username == req.body.username) {
-            try {
-                await blog.delete();
-                res.status(200).json({ message: "Blog has been deleted" });
-            } catch (err) {
-                next(err);
-            }
-        } else {
-            res.status(401).json("You are not authorized to delete this blog");
+        try {
+            await blog.delete();
+            res.status(200).json({ message: "Blog has been deleted" });
+        } catch (err) {
+            next(err);
         }
     } catch (err) {
         next(err);
@@ -116,12 +99,11 @@ router.get('/user/:username', async (req, res, next) => {
         if (!blogs || blogs.length === 0) {
             return res.status(404).json({ message: 'No blogs found' });
         }
-
         res.status(200).json(blogs);
     } catch (err) {
         next(err);
     }
 });
 
-module.exports = router; 
+module.exports = router;
 
