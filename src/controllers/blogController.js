@@ -79,12 +79,11 @@ router.put('/update/:blogId', async (req, res, next) => {
 router.delete('/delete/:blogId', async (req, res, next) => {
     try {
         const blog = await BlogModel.findById(req.params.blogId);
-        try {
-            await blog.delete();
-            res.status(200).json({ message: "Blog has been deleted" });
-        } catch (err) {
-            next(err);
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog not found' });
         }
+        await BlogModel.deleteOne({ _id: req.params.blogId });
+        res.status(200).json({ message: "Blog has been deleted" });
     } catch (err) {
         next(err);
     }
