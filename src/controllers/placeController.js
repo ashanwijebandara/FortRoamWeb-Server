@@ -117,7 +117,8 @@ router.get('/review/top', async (req, res, next) => {
                 street: detailedPlace.street,
                 description: detailedPlace.description,
                 averageRating: place.averageRating, 
-                totalReviews: place.totalReviews
+                totalReviews: place.totalReviews,
+                image:detailedPlace.image
             };
         }));
 
