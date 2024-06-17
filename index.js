@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const multer = require('multer');
 const path = require("path");
+require('dotenv').config();
 
 const app = express();
 
@@ -16,7 +16,8 @@ app.use("/src/images", express.static(path.join(__dirname, "/src/images")));
 
 app.use(cors());
 
-const dbUrl = "mongodb+srv://test_user:D803jMp9AalcQyxE@cluster0.szxkpy2.mongodb.net/FortRoam?retryWrites=true&w=majority";
+
+const dbUrl = process.env.MONGO_URL;
 
 mongoose.connect(dbUrl)
     .then(() => { 
@@ -28,22 +29,22 @@ mongoose.connect(dbUrl)
     } 
 );
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "src/images");
-    },
-    filename: (req, file, cb) => {
-      cb(null, req.body.name);
-    },
-  });
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//       cb(null, "src/images");
+//     },
+//     filename: (req, file, cb) => {
+//       cb(null, req.body.name);
+//     },
+//   });
 
-const upload = multer({storage:storage});
-app.post('/upload', upload.single('file'), (req, res) => { 
-    console.log(req.file); 
-    res.status(200).json('File has been uploaded');  
-}); 
+// const upload = multer({storage:storage});
 
- 
+// app.post('/upload', upload.single('file'), (req, res) => { 
+//     console.log(req.file); 
+//     res.status(200).json('File has been uploaded');  
+// }); 
+
 
 app.use("/user", userController);
 app.use("/place", placeController); 
