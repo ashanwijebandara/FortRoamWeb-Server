@@ -1,13 +1,13 @@
 const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const { crypto } = require("crypto")
+const crypto = require("crypto")
 const express = require('express');
 const PlaceModel = require('../models/places');
 
 const router = express.Router();
 
 const multer = require('multer');
-const imageName = (bytes=32) => crypto.randomBytes().toString('hex')
+const imageName = (bytes=32) => crypto.randomBytes(bytes).toString('hex')
 
 const bucketName = process.env.BUCKET_NAME;
 const bucketReagion = process.env.BUCKET_REGION;
