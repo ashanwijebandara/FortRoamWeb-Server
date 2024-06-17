@@ -103,7 +103,8 @@ router.get('/user/:username', async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-});
+}); 
 
 module.exports = router;
+
 
