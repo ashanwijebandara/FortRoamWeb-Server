@@ -206,6 +206,20 @@ router.get('/review/top', async (req, res, next) => {
         
         const topPlacesDetails = await Promise.all(top5Places.map(async place => {
             const detailedPlace = await PlaceModel.findById(place.placeId);
+
+            var url;
+            if (place.image) {
+                const getObjectParams = {
+                    Bucket: bucketName,
+                    Key: place.image
+                }
+                const command = new GetObjectCommand(getObjectParams);
+                url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+                place.imageURL = url;
+            } else {
+                console.error(`No image key found for place ID: ${place._id}`);
+            }
+
             return {
                 _id: detailedPlace._id,
                 title: detailedPlace.title,
@@ -213,7 +227,8 @@ router.get('/review/top', async (req, res, next) => {
                 description: detailedPlace.description,
                 averageRating: place.averageRating, 
                 totalReviews: place.totalReviews,
-                image:detailedPlace.image
+                image:detailedPlace.image,
+                imageURL:url
             };
         }));
 

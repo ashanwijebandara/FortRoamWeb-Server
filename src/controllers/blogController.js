@@ -80,6 +80,7 @@ router.get('/', async (req, res, next) => {
                 description: blog.description,
                 username: blog.username,
                 image: blog.image,
+                createdAt: blog.createdAt,
                 imageURL: url
             };
         }));
