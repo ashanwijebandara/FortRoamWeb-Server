@@ -208,14 +208,14 @@ router.get('/review/top', async (req, res, next) => {
             const detailedPlace = await PlaceModel.findById(place.placeId);
 
             var url;
-            if (place.image) {
+            if (detailedPlace.image) {
                 const getObjectParams = {
                     Bucket: bucketName,
                     Key: detailedPlace.image
                 }
                 const command = new GetObjectCommand(getObjectParams);
                 url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-                detailedPlace.imageURL = url;
+                place.imageURL = url;
             } else {
                 console.error(`No image key found for place ID: ${place._id}`);
             }
