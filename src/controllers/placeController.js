@@ -211,11 +211,11 @@ router.get('/review/top', async (req, res, next) => {
             if (place.image) {
                 const getObjectParams = {
                     Bucket: bucketName,
-                    Key: place.image
+                    Key: detailedPlace.image
                 }
                 const command = new GetObjectCommand(getObjectParams);
                 url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-                place.imageURL = url;
+                detailedPlace.imageURL = url;
             } else {
                 console.error(`No image key found for place ID: ${place._id}`);
             }
