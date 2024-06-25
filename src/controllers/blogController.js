@@ -74,16 +74,16 @@ router.get('/', async (req, res, next) => {
                 const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
                 blog.imageURL = url;
             }
-            // return {
-            //     _id: blog._id,
-            //     title: blog.title,
-            //     description: blog.description,
-            //     username: blog.username,
-            //     image: blog.image,
-            //     createdAt: blog.createdAt,
-            //     imageURL: url
-            // };
-            return blog;
+            return {
+                _id: blog._id,
+                title: blog.title,
+                description: blog.description,
+                username: blog.username,
+                image: blog.imageURL,
+                createdAt: blog.createdAt,
+                // imageURL: url
+            };
+            // return blog;
         }));
 
 
