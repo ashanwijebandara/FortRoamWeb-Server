@@ -79,9 +79,11 @@ router.get('/', async (req, res, next) => {
                 title: blog.title,
                 description: blog.description,
                 username: blog.username,
-                image: blog.image,
-                imageURL: url
+                image: blog.imageURL,
+                createdAt: blog.createdAt,
+                // imageURL: url
             };
+            // return blog;
         }));
 
 
@@ -219,6 +221,8 @@ router.get('/user/:username', async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-});
+}); 
 
 module.exports = router;
+
+

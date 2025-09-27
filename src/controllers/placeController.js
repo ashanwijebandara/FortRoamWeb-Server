@@ -258,7 +258,7 @@ router.get("/review/top", async (req, res, next) => {
           description: detailedPlace.description,
           averageRating: place.averageRating,
           totalReviews: place.totalReviews,
-          image: url,
+          image: detailedPlace.image,
         };
       })
     );
