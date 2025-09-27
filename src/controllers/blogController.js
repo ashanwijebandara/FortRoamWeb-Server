@@ -71,7 +71,7 @@ router.get('/', async (req, res, next) => {
                     Key: blog.image
                 };
                 const command = new GetObjectCommand(getObjectParams);
-                const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+                url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
                 blog.imageURL = url;
             }
             return {
@@ -126,10 +126,6 @@ router.put('/update/:blogId', upload.single('file'), async (req, res, next) => {
             return res.status(404).json({ message: 'Blog not found' });
         }
 
-        if (blog.username !== username) {
-            return res.status(401).json("You are not authorized to update this blog");
-        }
-
         if (req.file) {
             if (blog.image) {
                 const deleteParams = {
@@ -161,6 +157,7 @@ router.put('/update/:blogId', upload.single('file'), async (req, res, next) => {
         next(err);
     }
 });
+
 
 // delete a blog
 router.delete('/delete/:blogId', async (req, res, next) => {
