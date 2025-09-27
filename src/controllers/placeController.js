@@ -243,13 +243,13 @@ router.get("/review/top", async (req, res, next) => {
       top5Places.map(async (place) => {
         const detailedPlace = await PlaceModel.findById(place.placeId);
 
-        const getObjectParams = {
-          Bucket: bucketName,
-          Key: detailedPlace.image,
-        };
-        const command = new GetObjectCommand(getObjectParams);
-        const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-        detailedPlace.image = url;
+        // const getObjectParams = {
+        //   Bucket: bucketName,
+        //   Key: detailedPlace.image,
+        // };
+        // const command = new GetObjectCommand(getObjectParams);
+        // const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+        // detailedPlace.image = url;
 
         return {
           _id: detailedPlace._id,
