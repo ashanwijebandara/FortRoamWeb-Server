@@ -200,13 +200,6 @@ router.get("/:placeId", async (req, res, next) => {
     if (!place) {
       return res.status(404).json({ message: "Place not found" });
     }
-    const getObjectParams = {
-      Bucket: bucketName,
-      Key: place.image,
-    };
-    const command = new GetObjectCommand(getObjectParams);
-    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-    place.image = url;
 
     res.status(200).json(place);
   } catch (err) {
@@ -242,14 +235,6 @@ router.get("/review/top", async (req, res, next) => {
     const topPlacesDetails = await Promise.all(
       top5Places.map(async (place) => {
         const detailedPlace = await PlaceModel.findById(place.placeId);
-
-        // const getObjectParams = {
-        //   Bucket: bucketName,
-        //   Key: detailedPlace.image,
-        // };
-        // const command = new GetObjectCommand(getObjectParams);
-        // const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-        // detailedPlace.image = url;
 
         return {
           _id: detailedPlace._id,
