@@ -17,18 +17,18 @@ const router = express.Router();
 const multer = require("multer");
 const imageName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 
-// const bucketName = process.env.BUCKET_NAME;
-// const bucketReagion = process.env.BUCKET_REGION;
-// const bucketAccessKey = process.env.BUCKET_ACCESS_KEY;
-// const bucketSecretAccessKey = process.env.BUCKET_SECRET_ACCESS_KEY;
+const bucketName = process.env.BUCKET_NAME;
+const bucketReagion = process.env.BUCKET_REGION;
+const bucketAccessKey = process.env.BUCKET_ACCESS_KEY;
+const bucketSecretAccessKey = process.env.BUCKET_SECRET_ACCESS_KEY;
 
-// const s3Client = new S3Client({
-//     region: bucketReagion,
-//     credentials: {
-//         accessKeyId: bucketAccessKey,
-//         secretAccessKey: bucketSecretAccessKey
-//     }
-// });
+const s3Client = new S3Client({
+    region: bucketReagion,
+    credentials: {
+        accessKeyId: bucketAccessKey,
+        secretAccessKey: bucketSecretAccessKey
+    }
+});
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
